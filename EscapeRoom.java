@@ -110,6 +110,7 @@ public class EscapeRoom
         }
         else {
           System.out.println("Invalid command, please try inputting it again.");
+            int invalidCommandPenalty = 2; 
         }
       }
 
