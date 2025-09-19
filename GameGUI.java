@@ -46,6 +46,7 @@ public class GameGUI extends JComponent
   private Image prizeImage;
   private int totalPrizes;
   private Rectangle[] prizes;
+  private Image trapImage;
   private int totalTraps;
   private Rectangle[] traps;
 
@@ -63,6 +64,7 @@ public class GameGUI extends JComponent
    * Constructor for the GameGUI class.
    * Creates a frame with a background image and a player that will move around the board.
    */
+  
   public GameGUI()
   {
     
@@ -83,6 +85,12 @@ public class GameGUI extends JComponent
     } catch (Exception e) {
      System.err.println("Could not open file player.png");
     }
+    try {
+      trapImage = ImageIO.read(new File("trap.png"));      
+    } catch (Exception e) {
+      System.err.println("Could not open file trap.png");
+    }
+
     // save player location
     playerLoc = new Point(x,y);
 
@@ -134,8 +142,7 @@ public class GameGUI extends JComponent
   {
       int newX = x + incrx;
       int newY = y + incry;
-      
-      // increment regardless of whether player really moves
+    
       playerSteps++;
 
       // check if off grid horizontally and vertically
@@ -380,12 +387,16 @@ public class GameGUI extends JComponent
     // draw grid
     g.drawImage(bgImage, 0, 0, null);
 
-    // add (invisible) traps
-    for (Rectangle t : traps)
-    {
-      g2.setPaint(Color.WHITE); 
-      g2.fill(t);
-    }
+    // add traps
+  for (Rectangle t : traps)
+  {
+  if (t.getWidth() > 0) { // skip sprung traps
+    int tx = (int) t.getX();
+    int ty = (int) t.getY();
+    g.drawImage(trapImage, tx, ty, 20, 20, null);
+  }
+  }
+
 
     // add prizes
     for (Rectangle p : prizes)
@@ -478,11 +489,14 @@ public class GameGUI extends JComponent
        walls[numWalls] = r;
      }
   }
+  
 
   /**
    * Checks if player as at the far right of the board 
    * @return positive score for reaching the far right wall, penalty otherwise
    */
+
+
   private int playerAtEnd() 
   {
     int score;
@@ -500,5 +514,6 @@ public class GameGUI extends JComponent
     }
     return score;
   
+    
   }
 }
